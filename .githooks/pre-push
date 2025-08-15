@@ -1,0 +1,15 @@
+#!/bin/sh
+
+protected_branch='internal'
+remote_to_protect='origin'
+
+while read local_ref local_sha remote_ref remote_sha; do
+    if [ "$(basename "$local_ref")" = "$protected_branch" ] && [ "$1" = "$remote_to_protect" ]; then
+        echo "!! GITHUB PUSH REJECTED !!"
+        echo "You are trying to push the protected branch ('$protected_branch') to the public remote ('$remote_to_protect')."
+        echo "Push this branch to the 'gitlab' remote instead."
+        exit 1 # This exits and blocks the push
+    fi
+done
+
+exit 0 # Allow the push
